@@ -1,0 +1,31 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 سحب الكود
+      uses: actions/checkout@v4
+      
+    - name: ☕ تثبيت Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: 🛠️ بناء التطبيق
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleDebug
+        
+    - name: 📤 رفع ملف APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: FruitNinjaHelper
+        path: app/build/outputs/apk/debug/*.apk
